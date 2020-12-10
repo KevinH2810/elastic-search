@@ -13,5 +13,9 @@ module.exports = {
         database: process.env.DB_ES_NAME,
         username: process.env.DB_ES_USER,
         password: process.env.DB_ES_PASSWORD || '',
+    },
+    elasticSearch: {
+        port: process.env.ES_PORT || 9200,
+        host: process.env.ES_HOST,
     }
 }

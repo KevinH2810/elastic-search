@@ -6,6 +6,7 @@ const config = require('../config/config');
 
 module.exports = class AuthController extends BaseController {
 
+    //register to MongoDB
     // async register(req, res) {
     //     const { username, password } = req.query;
     //     const handleError = new HandleError();
@@ -27,6 +28,7 @@ module.exports = class AuthController extends BaseController {
     // async login(req, res) {
     //     const { username, password } = req.query;
 
+    //get from mongodb
     //     conn.get(`SELECT * FROM USER WHERE username = ?`, [username], async(err, result) => {
     //         if (err) {
     //             handleError.sendCatchError(res, err);
