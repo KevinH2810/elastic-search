@@ -12,7 +12,7 @@ $ yarn install or npm install
 $ yarn start or npm start
 # start the app using yarn or npm
 ```
-
+After clonning the repository, open the folder and rename ```.env.example``` to ```.env``` and setting the value to your desired settings
 ## Routes
 
 ### available routes on this apps are
