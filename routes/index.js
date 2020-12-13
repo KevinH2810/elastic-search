@@ -4,5 +4,5 @@
       app.use('/addmoney', require('./addmoney'));
       app.use('/addAssets', require('./addAssets'));
       app.use('/token', require('./token'));
-      app.use('/v1/Citizen', require('./addCitizen'));
+      app.use('/v1/Citizen', require('./Citizen'));
   }
