@@ -1,67 +1,96 @@
-const BaseController = require('./BaseController');
-const HandleError = require('./HandleError');
-const md5 = require('md5')
-const jwt = require('jsonwebtoken');
-const config = require('../config/config');
+const BaseController = require("./BaseController");
+const HandleError = require("./HandleError");
+const jwt = require("jsonwebtoken");
+const config = require("../config/config");
+const { LoginService } = require("../services");
 
 module.exports = class AuthController extends BaseController {
+	constructor() {
+		super(new LoginService());
+	}
 
-    //register to MongoDB
-    // async register(req, res) {
-    //     const { username, password } = req.query;
-    //     const handleError = new HandleError();
+	// register to MongoDB
+	async register(req, res) {
+		const { username, password } = req.query;
+		const handleError = new HandleError();
+		const hashedPassword = await this.hashPassword(password);
+		console.log(`hashedPassword = ${hashedPassword}`)
 
-    //     conn.run(`INSERT INTO USER(username,password) VALUES(?,?)`, [username, md5(password)], function(err) {
-    //         if (err) {
-    //             handleError.sendCatchError(res, err);
-    //             return;
-    //         }
+		this.service.ValidateUserInDatabe(username, (err, result) => {
+			console.log(`username = ${username}`)
+			if (err){
+				handleError.sendCatchError(res, err);
+					return;
+			}
 
-    //         res.json({
-    //             "status": 200,
-    //             "message": "register success",
-    //         })
-    //         return;
-    //     })
-    // }
+			
 
-    // async login(req, res) {
-    //     const { username, password } = req.query;
+			if(result){
+				return this.sendResourceAlreadyExistResponse(res , {
+					status: 409,
+					message: "User Already Registered"
+				})
+			}
 
-    //get from mongodb
-    //     conn.get(`SELECT * FROM USER WHERE username = ?`, [username], async(err, result) => {
-    //         if (err) {
-    //             handleError.sendCatchError(res, err);
-    //             return;
-    //         }
+			if (!result){
+				this.service.registerNewUser(
+					{ username, hashedPassword },
+					(err, result) => {
+						if (err) {
+							handleError.sendCatchError(res, err);
+							return;
+						}
+		
+						return this.sendSuccessResponse(res, {
+							status: 200,
+							message: "User Registered",
+						});
+					}
+				);
+			}
+		})	
+	}
 
-    //         if (result.length === 0) {
-    //             res.json({
-    //                 "code": 206,
-    //                 "failed": "username does not exist"
-    //             })
-    //             return;
-    //         }
+	async login(req, res) {
+		const { username, password } = req.query;
 
-    //         if (md5(password) !== result.password) {
-    //             res.json({
-    //                 "code": 204,
-    //                 "failed": "password does not match"
-    //             })
-    //             return;
-    //         }
+		// get from mongodb
+		this.service.ValidateUserInDatabe({username}, (err, result) => {
+			if (err) {
+				handleError.sendCatchError(res, err);
+				return;
+			}
 
-    //         // create a token
-    //         var tokens = jwt.sign({ username: result.username, password: result.password }, config.token.secret, {
-    //             expiresIn: 86400 // expires in 24 hours
-    //         })
+			if (result.length === 0) {
+				return this.sendNotFoundResponse(res, {
+					status: 404,
+					message: "username does not exist",
+				});
+			}
 
-    //         res.json({
-    //             "code": 200,
-    //             "failed": "login succesfull",
-    //             "token": tokens
-    //         })
-    //         return;
-    //     })
-    // }
-}
+			if (this.isPasswordCorrect(password, result.password)) {
+				return this.sendInvalidPayloadResponse(res, {
+					status: 422,
+					message: "password does not match",
+				});
+			}
+
+			// create a token
+			var tokens = jwt.sign(
+				{ username: result.username, password: result.password },
+				config.token.secret,
+				{
+					expiresIn: 86400, // expires in 24 hours
+				}
+			);
+
+			return this.sendSuccessResponse(res, {
+				status: 200,
+				message: {
+					message: "login succesfull",
+					token: tokens,
+				},
+			});
+		});
+	}
+};

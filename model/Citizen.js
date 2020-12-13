@@ -17,7 +17,10 @@ const schema = new mongoose.Schema({
   JobType: { type: String },
 });
 
-schema.plugin(mongoosastic);
+schema.plugin(mongoosastic, {
+  "host": config.elasticSearch.host,
+  "port": config.elasticSearch.port,
+});
 schema.plugin(Upserts);
 
 module.exports = mongoose.model('Citizen', schema);

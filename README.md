@@ -1,64 +1,111 @@
 # Backend-login-simple
 
 ## How to Usage
-```bash
-$ git clone git@github.com:KevinH2810/Backend-login-simple.git
-# clone the repository from your branch
 
-$ cd Backend-login-simple
-# change directory to Backend-login-simple
+```bash
+$ git clone git@github.com:KevinH2810/elastic-search.git
+# clone the repository to your computer
 
 $ yarn install or npm install
 # install dependencies using yarn or npm
-
-$ export SECRET=secretkeyoflogin
-# export the secret key to be used to generate JWT token
 
 $ yarn start or npm start
 # start the app using yarn or npm
 ```
 
 ## Routes
+
 ### available routes on this apps are
 
 ```bash
-localhost:{port}/register
-localhost:{port}/login
-localhost:{port}/addMoney
-localhost:{port}/addAssets
-localhost:{port}/token
-localhost:{port}/token/add
+# [GET] - to Login
+localhost:{port}/v1/Login/
+# [POST] - to register
+localhost:{port}/v1/Login/register
+# [GET, POST, PUT, DELETE]
+localhost:{port}/v1/Citizen/
 ```
 
-## Register
----
-you can register a new user in here by supplying the username and password.
-
 ## Login
+
 ---
+### [POST] - /v1/Login/Register
+you can register a new user in here by supplying the username and password as request query (Params).
+
+```Params - username & password```
+
+---
+### [GET] - /v1/Login/
+
 Used to login and generate the JWTtoken
 the token are available for 24 Hours by supplying username and password.
+as request query (Params).
 
-## Add Money
----
-Used to add Money to user Balance. 
-you can supply username and money, JWT token arent needed because we're assumed the TopUp are added manually
+```Params - username & password```
 
-## Token - /
+## Citizen
+
 ---
+### [GET] - /v1/Citizen/
+
+Used to add Citizen to the database.
+you can supply username and money, JWT token are needed in the header as Bearer Token to validate the user that's gonna input the data.
+
+```
+Params :
+
+search
+```
+
+---
+### [POST] - /v1/Citizen/
 Get the list of all available tokens.
 
-## Token - /Add
+```
+Params 
+(Body - x-www-form-urlencoded):
+
+Name
+Email
+PhoneNumber
+Address
+City
+State
+Country
+CompanyName
+JobTitle
+JobDescription
+JobType
+```
+
 ---
-Add New Token by supplying tokenName and tokenPrice
+### [PUT] - /v1/Citizen/
+Get the list of all available tokens.
 
-## Add Asset 
+```
+Params 
+(Body - x-www-form-urlencoded):
+
+id [must](_id: of the data, can be acquired when search the data)
+Name
+Email
+PhoneNumber
+Address
+City
+State
+Country
+CompanyName
+JobTitle
+JobDescription
+JobType
+```
+
 ---
+### [DELETE] - /v1/Citizen/
+Get the list of all available tokens.
 
-used to add asset based per user id.
+```
+Params:
 
-it will insert new data if its a new user or update if already exist.
-
-the transaction history is recorded in respective table.
-
-you can supply tokenName, tokenAmount and JWTtoken as Bearer Token in the header
+id [must](_id: of the data, can be acquired when search the data)
+```

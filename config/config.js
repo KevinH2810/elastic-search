@@ -5,7 +5,7 @@ module.exports = {
         port: process.env.API_PORT,
     },
     token: {
-        secret: process.env.SECRET,
+        secret: process.env.SECRET_KEY,
     },
     mongodb: {
         port: process.env.DB_PORT || 27017,
@@ -16,6 +16,10 @@ module.exports = {
     },
     elasticSearch: {
         port: process.env.ES_PORT || 9200,
-        host: process.env.ES_HOST,
+        host: process.env.ES_HOST || 'localhost',
+    },
+    salt: {
+        salt: process.env.SALT_SYS || '',
+        iteration: process.env.SALT_ITERATION || 0,
     }
 }

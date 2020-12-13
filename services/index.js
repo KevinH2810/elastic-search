@@ -1,5 +1,7 @@
 const CitizenService = require('./citizenServices')
+const LoginService = require('./loginService')
 
 module.exports = {
-  CitizenService
+  CitizenService,
+  LoginService,
 }

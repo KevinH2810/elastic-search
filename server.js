@@ -5,6 +5,7 @@ const config = require('./config/config')
 const bodyParser = require('body-parser'); 
 
 require('./db/mongoDB')()
+require('./db/initDB')()
 
 app.use(cors())
 app.use(bodyParser.urlencoded({ extended: false }))
